@@ -6,7 +6,7 @@ exports.anime_list = async function(req, res) {
         const animeList = await Anime.find({}, 'name thumbnail mla');
         res.json(animeList);
     } catch(err) {
-        res.status(400).json(`Something went wrong ${err}`);
+        res.status(400).json({message: `Something went wrong ${err}`});
     }
 };
 
@@ -18,6 +18,6 @@ exports.anime_detail = async function(req, res) {
         ]);
         res.json({anime: anime, waifuList: waifuList});
     } catch(err) {
-        res.status(400).json(`Something went wrong ${err}`);
+        res.status(400).json({message: `Something went wrong ${err}`});
     }
 }
