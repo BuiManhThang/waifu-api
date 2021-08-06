@@ -14,6 +14,7 @@ const app = express();
 const waifuRouter = require('./routers/waifu');
 const animeRouter = require('./routers/anime');
 const genreRouter = require('./routers/genre');
+const searchRouter = require('./routers/search');
 
 // midleware
 app.use(express.static('public'));
@@ -36,6 +37,7 @@ mongoose.connect(process.env.MONGODB_URL, {useNewUrlParser: true, useUnifiedTopo
 app.use('/waifu', waifuRouter);
 app.use('/anime', animeRouter);
 app.use('/genre', genreRouter);
+app.use('/search', searchRouter);
 
 app.listen(port, () => {
     console.log('App is ready at port ' + port);
