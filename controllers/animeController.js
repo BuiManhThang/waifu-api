@@ -3,7 +3,7 @@ const Waifu = require('../models/waifu');
 
 exports.anime_list = async function(req, res) {
     try {
-        const animeList = await Anime.find({}, 'name thumbnail mla');
+        const animeList = await Anime.find({}, 'name thumbnail mla _id');
         res.json(animeList);
     } catch(err) {
         res.status(400).json({message: `Something went wrong ${err}`});

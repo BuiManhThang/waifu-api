@@ -8,7 +8,8 @@ const waifuSchema = new Schema({
     thumbnail: {type: String, required: true},
     detail: {type: String, required: true},
     anime: {type: Schema.Types.ObjectId, required: true, ref: 'Anime'},
-    genre: [{type: Schema.Types.ObjectId, ref: 'Genre'}]
+    genre: [{type: Schema.Types.ObjectId, ref: 'Genre'}],
+    user: [{type: Schema.Types.ObjectId, ref: 'User'}]
 });
 
 waifuSchema.virtual('url').get(() => {
