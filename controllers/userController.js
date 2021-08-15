@@ -93,11 +93,17 @@ exports.update = [
     body('name').trim().isLength({min: 1}).withMessage('Name is empty'),
 
     async function(req, res) {
-        const errors = validationResult(req);
-        if(!errors.isEmpty()) {
-            return res.json({errors: errors.array()});
-        }
         try {
+            const errors = validationResult(req);
+            if(!errors.isEmpty()) {
+                if(req.file) {
+                    const avatafile = path.join(__dirname.slice(0, __dirname.indexOf('controllers')), 'public', 'images', 'users', req.file.filename);
+                    console.log(avatafile)
+                    fs.unlinkSync(avatafile);
+                }
+
+                return res.json({errors: errors.array()});
+            }
             const user = await User.findById(req.body.userid);
             if(!user) {
                 return res.json({message: 'User is not exist'});
@@ -158,6 +164,44 @@ exports.like = async function(req, res) {
             Waifu.findByIdAndUpdate(req.body.waifuId, waifu, '')  
         ]);
         res.json(theUser);
+    } catch(err) {
+        res.status(400).json({message: err})
+    }
+};
+
+exports.list = async function(req, res) {
+    try {
+        const user = await User.findById(req.body.userId);
+        if(user.role !== 'admin') {
+            return res.status(400).json({message: "Don't have permission"});
+        }
+        const userList = await User.find();
+        const resultUserList = userList.map(user => {
+            const {password, avata, waifu, ...infor} = user.toJSON();
+            return infor;
+        })
+        res.json(resultUserList);
+    } catch(err) {
+        res.status(400).json({message: err})
+    }
+};
+
+exports.delete = async function(req, res) {
+    try {
+        const theUser = await User.findById(req.body.userId);
+        if(theUser.role !== 'admin') {
+            return res.status(400).json({message: "Don't have permission"});
+        }
+        const {user} = req.body;
+        for(let i = 0; i < user.length; i++) {
+            const theUser = await User.findByIdAndDelete(user[i]);
+            await theUser.remove();
+            if(theUser.avata.indexOf('avata_default') === -1) {
+                const avatafile = path.join(__dirname.slice(0, __dirname.indexOf('controllers')), 'public', theUser.avata.slice(theUser.avata.indexOf('images')))
+                fs.unlinkSync(avatafile);
+            }
+        }
+        res.json({message: 'success'});
     } catch(err) {
         res.status(400).json({message: err})
     }

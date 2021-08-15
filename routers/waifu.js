@@ -20,6 +20,8 @@ router.get('/list', waifuController.waifu_list);
 
 router.post('/create', upload.single('thumbnail'), auth.authorization, waifuController.waifu_create);
 
+router.post('/update', upload.single('thumbnail'), auth.authorization, waifuController.waifu_update);
+
 router.post('/delete', auth.authorization, waifuController.waifu_delete);
 
 router.get('/:id', waifuController.waifu_detail);

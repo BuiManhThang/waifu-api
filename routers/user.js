@@ -20,9 +20,13 @@ router.post('/register', userController.register);
 
 router.get('/infor', auth.authorization, userController.infor);
 
+router.get('/list', auth.authorization, userController.list);
+
 router.post('/login', userController.login);
 
 router.get('/logout', auth.authorization, userController.logout);
+
+router.post('/delete', auth.authorization, userController.delete);
 
 router.post('/update', auth.authorization, upload.single('avata'), userController.update);
 

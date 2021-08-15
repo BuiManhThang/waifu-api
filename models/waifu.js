@@ -20,4 +20,13 @@ waifuSchema.virtual('birth_day_formatted').get(() => {
     return DateTime.fromJSDate(this.birth_day).toLocaleString();
 });
 
+waifuSchema.pre('remove', function(next) {
+    const waifu = this;
+    waifu.model('User').update(
+        { waifu: waifu._id }, 
+        { $pull: { waifu: waifu._id } }, 
+        { multi: true }, 
+        next);
+})
+
 module.exports = mongoose.model('Waifu', waifuSchema);

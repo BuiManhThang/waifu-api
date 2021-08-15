@@ -11,4 +11,14 @@ const userSchema = new Schema({
     waifu: [{type: Schema.Types.ObjectId, ref: 'Waifu'}]
 })
 
+userSchema.pre('remove', function(next) {
+    const user = this;
+    user.model('Waifu').update(
+        {user: user._id},
+        {$pull: {user: user._id}},
+        {multi: true},
+        next
+    )
+})
+
 module.exports = mongoose.model('User', userSchema);
